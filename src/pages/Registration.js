@@ -10,8 +10,10 @@ import {
   FormControlLabel,
   Button,
   Container,
+  Box,
 } from "@mui/material";
 import { setUserData } from "../features/user/userSlice";
+
 
 const Registration = () => {
   const [formData, setFormData] = useState({
@@ -21,6 +23,10 @@ const Registration = () => {
     dl: false,
     dlNumber: "",
     dob: "",
+  });
+  const [formValidation, setFormValidation] = useState({
+    errorMsg: "",
+    valid: true,
   });
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -46,22 +52,26 @@ const Registration = () => {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
+    let valid = true;
     //   email: "",
     // password: "",
     // fullName: "",
     // dl: false,
     // dlNumber: "",
     // dob: "",
-    // if(formData.email.length<1){
-    // setError
-    // errorMsg:"please enter email",
-    // valid : false
+    if (formData.email.length < 1) {
+      valid = false;
+      setFormValidation({
+        errorMsg: "please enter email",
+        valid: false,
+      });
+    }
 
-    // }
-
-    dispatch(setUserData(formData));
-    navigate("/dashboard");
-    resetForm();
+    if (valid) {
+      dispatch(setUserData(formData));
+      navigate("/dashboard");
+      resetForm();
+    }
   };
 
   const resetForm = () => {
@@ -178,6 +188,9 @@ const Registration = () => {
               </FormControl>
             )}
           </>
+        )}
+        {!formValidation.valid && (
+          <Box sx={{ bgcolor: "error.main",padding:"4px" }}>{formValidation?.errorMsg}</Box>
         )}
         <Button onClick={handleSubmit} variant="contained">
           submit
