@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-escape */
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -73,7 +74,7 @@ const Registration = () => {
         });
       }
     }
-    // eslint-disable-next-line no-useless-escape
+    
     if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(formData.email)) {
       console.log("valid not email");
       valid = false;
@@ -138,6 +139,7 @@ const Registration = () => {
   useEffect(() => {
     console.log("form data chnageSs");
     isValid();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formData]);
 
   return (
