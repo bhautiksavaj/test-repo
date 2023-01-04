@@ -76,7 +76,7 @@ const Registration = () => {
     }
     
     if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(formData.email)) {
-      console.log("valid not email");
+
       valid = false;
       setFormValidation({
         errorMsg: "please enter email",
@@ -137,7 +137,6 @@ const Registration = () => {
     formData?.dob && setAge(getAge(formData.dob || new Date()));
   }, [formData.dob]);
   useEffect(() => {
-    console.log("form data chnageSs");
     isValid();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formData]);
@@ -233,7 +232,7 @@ const Registration = () => {
             )}
           </>
         )}
-        {console.log(formValidation)}
+
         {!formValidation.valid && (
           <Box sx={{ bgcolor: "error.main", padding: "4px" }}>
             {formValidation?.errorMsg}
