@@ -14,7 +14,6 @@ import {
 } from "@mui/material";
 import { setUserData } from "../features/user/userSlice";
 
-
 const Registration = () => {
   const [formData, setFormData] = useState({
     email: "",
@@ -50,24 +49,62 @@ const Registration = () => {
       };
     });
   };
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const isValid = () => {
     let valid = true;
-    //   email: "",
-    // password: "",
-    // fullName: "",
-    // dl: false,
-    // dlNumber: "",
-    // dob: "",
-    if (formData.email.length < 1) {
+    if (
+      /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(formData.email) &&
+      formData?.password &&
+      formData?.fullName &&
+      formData.dob
+    ) {
+      if (getAge(formData.dob) >= 18 && formData.dl) {
+        if (formData.dlNumber) {
+          valid = true;
+          setFormValidation({
+            errorMsg: "",
+            valid: true,
+          });
+        }
+      } else {
+        valid = true;
+        setFormValidation({
+          errorMsg: "",
+          valid: true,
+        });
+      }
+    }
+    // eslint-disable-next-line no-useless-escape
+    if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(formData.email)) {
+      console.log("valid not email");
       valid = false;
       setFormValidation({
         errorMsg: "please enter email",
         valid: false,
       });
+    } else if (!formData?.password) {
+      valid = false;
+      setFormValidation({
+        errorMsg: "please enter password",
+        valid: false,
+      });
+    } else if (!formData?.fullName) {
+      valid = false;
+      setFormValidation({
+        errorMsg: "please enter fullName",
+        valid: false,
+      });
+    } else if (!formData?.dob) {
+      valid = false;
+      setFormValidation({
+        errorMsg: "please enter Date of birth",
+        valid: false,
+      });
     }
-
-    if (valid) {
+    return valid;
+  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (isValid()) {
       dispatch(setUserData(formData));
       navigate("/dashboard");
       resetForm();
@@ -98,6 +135,11 @@ const Registration = () => {
   useEffect(() => {
     formData?.dob && setAge(getAge(formData.dob || new Date()));
   }, [formData.dob]);
+  useEffect(() => {
+    console.log("form data chnageSs");
+    isValid();
+  }, [formData]);
+
   return (
     <Container maxWidth="sm">
       <h1>Registration page </h1>
@@ -189,8 +231,11 @@ const Registration = () => {
             )}
           </>
         )}
+        {console.log(formValidation)}
         {!formValidation.valid && (
-          <Box sx={{ bgcolor: "error.main",padding:"4px" }}>{formValidation?.errorMsg}</Box>
+          <Box sx={{ bgcolor: "error.main", padding: "4px" }}>
+            {formValidation?.errorMsg}
+          </Box>
         )}
         <Button onClick={handleSubmit} variant="contained">
           submit
